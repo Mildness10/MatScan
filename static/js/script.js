@@ -39,16 +39,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
-// const image_input = document.querySelector('#image_input');
 
-// image_input.addEventListener('change', function(event) {
-//   const file_reader = new FileReader();
-//   file_reader.addEventListener('load', () => {
-//     const uploaded_image = file_reader.result;
-//     document.querySelector('#display_image').style.backgroundImage =`url(${uploaded_image})`;
-//   });
-//   file_reader.readAsDataURL(event.target.files[0]);
-// });
 const image_input = document.querySelector('#image_input');
 const image_preview = document.querySelector('#image_preview');
 
