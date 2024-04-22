@@ -12,7 +12,23 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 model = genai.GenerativeModel('gemini-pro-vision')
 
-response = model.generate_content(["Give a thorough description of what is contained in this image.", img], stream=True)
-response.resolve()
+# response = model.generate_content(["Give a thorough description of what is contained in this image.", img], stream=True)
+# response.resolve()
 
-print(response.text)
+# print(response.text)
+
+def process_image(image_file):
+    try:
+        # Open image file
+        img = PIL.Image.open(image_file)
+        
+        # Generate content description
+        response = model.generate_content(["Give a thorough description of what is contained in this image.", img], stream=True)
+        response.resolve()
+        
+        # Extract and return description
+        description = response.text
+        return description
+    except Exception as e:
+        print(f"Error processing image: {e}")
+        return "Error processing image"

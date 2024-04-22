@@ -22,21 +22,7 @@ window.addEventListener('DOMContentLoaded', event => {
         }
 
     };
-
-    // Shrink the navbar 
     navbarShrink();
-
-    // Shrink the navbar when page is scrolled
-    document.addEventListener('scroll', navbarShrink);
-
-    // Activate Bootstrap scrollspy on the main nav element
-    const mainNav = document.body.querySelector('#mainNav');
-    if (mainNav) {
-        new bootstrap.ScrollSpy(document.body, {
-            target: '#mainNav',
-            rootMargin: '0px 0px -40%',
-        });
-    };
 
     // Collapse responsive navbar when toggler is visible
     const navbarToggler = document.body.querySelector('.navbar-toggler');
@@ -51,9 +37,79 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
-    // Activate SimpleLightbox plugin for portfolio items
-    new SimpleLightbox({
-        elements: '#portfolio a.portfolio-box'
-    });
-
 });
+
+// const image_input = document.querySelector('#image_input');
+
+// image_input.addEventListener('change', function(event) {
+//   const file_reader = new FileReader();
+//   file_reader.addEventListener('load', () => {
+//     const uploaded_image = file_reader.result;
+//     document.querySelector('#display_image').style.backgroundImage =`url(${uploaded_image})`;
+//   });
+//   file_reader.readAsDataURL(event.target.files[0]);
+// });
+const image_input = document.querySelector('#image_input');
+const image_preview = document.querySelector('#image_preview');
+
+image_input.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            image_preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        image_preview.src = ''; 
+    }
+});
+
+
+
+const image_form = document.querySelector('#image_form');
+const loadingContainer = document.querySelector('#loading');
+const responseContainer = document.querySelector('#response_container');
+
+image_form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData(image_form);
+    
+    try {
+        // Show loading icon and text
+        loadingContainer.style.display = 'block';
+        
+        const response = await fetch('', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Clear loading icon and text
+            loadingContainer.style.display = 'none';
+            
+            responseContainer.innerHTML = ''; // Clear the container
+            
+            // Split the description into words
+            const words = data.description.split(' ');
+            
+            // Display the response word by word
+            for (let i = 0; i < words.length; i++) {
+                setTimeout(() => {
+                    responseContainer.textContent += words[i] + ' ';
+                }, i * 50); // Adjust the delay as needed
+            }
+            
+            // Add margin to the response container
+            responseContainer.style.margin = '20px 50px'; // Adjust the margin as needed
+        } else {
+            throw new Error('Failed to process image');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
